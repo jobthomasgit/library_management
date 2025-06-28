@@ -1,0 +1,364 @@
+/* Library Dashboard Styles */
+
+.library_dashboard {
+    padding: 20px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+/* Dashboard Header */
+.dashboard_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard_title {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.dashboard_title i {
+    margin-right: 10px;
+}
+
+/* Loading State */
+.dashboard_loading {
+    text-align: center;
+    padding: 50px;
+}
+
+.dashboard_loading p {
+    margin-top: 15px;
+    color: #6c757d;
+    font-size: 1.1rem;
+}
+
+/* Statistics Cards */
+.stat_card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.stat_card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.stat_card .card-body {
+    padding: 25px;
+    display: flex;
+    align-items: center;
+}
+
+.stat_icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    font-size: 24px;
+    color: white;
+}
+
+.books_icon {
+    background: linear-gradient(135deg, #28a745, #20c997);
+}
+
+.members_icon {
+    background: linear-gradient(135deg, #007bff, #6610f2);
+}
+
+.moves_icon {
+    background: linear-gradient(135deg, #ffc107, #fd7e14);
+}
+
+.activity_icon {
+    background: linear-gradient(135deg, #6f42c1, #e83e8c);
+}
+
+.stat_content {
+    flex: 1;
+}
+
+.stat_number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0;
+    color: #2c3e50;
+}
+
+.stat_label {
+    font-size: 1rem;
+    color: #6c757d;
+    margin: 5px 0 10px 0;
+}
+
+.stat_details {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.stat_details .badge {
+    font-size: 0.75rem;
+    padding: 5px 8px;
+}
+
+/* Chart Cards */
+.chart_card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.chart_card .card-header {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-bottom: 1px solid #dee2e6;
+    border-radius: 15px 15px 0 0;
+    padding: 15px 20px;
+}
+
+.chart_card .card-header h5 {
+    margin: 0;
+    color: #495057;
+    font-weight: 600;
+}
+
+.chart_card .card-header i {
+    margin-right: 8px;
+    color: #6c757d;
+}
+
+.chart_card .card-body {
+    padding: 20px;
+}
+
+.chart_canvas {
+    width: 100% !important;
+    height: 200px !important;
+}
+
+/* Simple Charts */
+.simple_chart {
+    padding: 10px 0;
+}
+
+.chart_item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 8px 0;
+}
+
+.chart_label {
+    width: 80px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #495057;
+    margin-right: 15px;
+}
+
+.chart_bar {
+    flex: 1;
+    height: 20px;
+    background-color: #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-right: 15px;
+}
+
+.chart_fill {
+    height: 100%;
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    border-radius: 10px;
+    transition: width 0.3s ease;
+}
+
+.chart_value {
+    width: 40px;
+    text-align: right;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 0.9rem;
+}
+
+/* Recent Activities */
+.activity_list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.activity_item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #f1f3f4;
+    transition: background-color 0.2s ease;
+}
+
+.activity_item:hover {
+    background-color: #f8f9fa;
+}
+
+.activity_item:last-child {
+    border-bottom: none;
+}
+
+.activity_icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    color: #6c757d;
+}
+
+.activity_content {
+    flex: 1;
+}
+
+.activity_title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.activity_title strong {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.activity_details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.member_name {
+    font-weight: 500;
+}
+
+.activity_date {
+    font-size: 0.8rem;
+}
+
+/* Badge Colors */
+.badge-success {
+    background-color: #28a745;
+}
+
+.badge-danger {
+    background-color: #dc3545;
+}
+
+.badge-warning {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.badge-info {
+    background-color: #17a2b8;
+}
+
+.badge-secondary {
+    background-color: #6c757d;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dashboard_header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .dashboard_title {
+        font-size: 1.5rem;
+    }
+    
+    .stat_card .card-body {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .stat_icon {
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+    
+    .stat_details {
+        justify-content: center;
+    }
+    
+    .activity_title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .activity_details {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .chart_item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .chart_label {
+        width: 100%;
+        margin-right: 0;
+    }
+    
+    .chart_bar {
+        width: 100%;
+        margin-right: 0;
+    }
+    
+    .chart_value {
+        width: 100%;
+        text-align: left;
+    }
+}
+
+/* Custom Scrollbar */
+.activity_list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.activity_list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.activity_list::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.activity_list::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+} 

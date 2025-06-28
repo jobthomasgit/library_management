@@ -1,0 +1,37 @@
+{
+    "name": "ISPG Library Management",
+    "version": "18.0.1.0.0",
+    "category": "Library",
+    "summary": "A simple library management module",
+    "description": "Manage books, members, and library operations.",
+    "author": "Thomas Job",
+    "depends": [
+        "base",
+        "base_setup",
+        "web",
+        "account",
+    ],
+    "data": [
+        "security/ir.model.access.csv",
+        "data/library_member_sequence.xml",
+        "data/book_move_sequence.xml",
+        "data/cron_jobs.xml",
+        "views/library_book_views.xml",
+        "views/res_config_settings_views.xml",
+        "views/book_author_views.xml",
+        "views/library_members_views.xml",
+        "views/book_move_views.xml",
+        "views/library_dashboard_views.xml",
+        "wizard/membership_renew_wizard.xml",
+    ],
+    "assets": {
+        "web.assets_backend": [
+            "ispg_library_management/static/src/css/dashboard.css",
+            "ispg_library_management/static/src/js/dashboard/simple_dashboard.js",
+            "ispg_library_management/static/src/xml/simple_dashboard.xml",
+        ],
+    },
+    "installable": True,
+    "application": True,
+    "license": "LGPL-3",
+} 

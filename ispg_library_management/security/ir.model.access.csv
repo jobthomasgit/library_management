@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_library_book,access.library.book,model_library_book,,1,1,1,1
+access_book_author,access.book.author,model_book_author,,1,1,1,1
+access_book_move,access.book.move,model_book_move,,1,1,1,1
+access_library_dashboard,access.library.dashboard,model_library_dashboard,,1,0,0,0
+access_membership_renew_wizard,access.membership.renew.wizard,model_membership_renew_wizard,,1,1,1,1

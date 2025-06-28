@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="simple_library_dashboard" owl="1">
+        <div class="library_dashboard">
+            <!-- Header -->
+            <div class="dashboard_header">
+                <h1 class="dashboard_title">
+                    <i class="fa fa-tachometer"></i>
+                    Library Dashboard
+                </h1>
+                <button class="btn btn-primary" t-on-click="refreshData" t-att-disabled="state.loading">
+                    <i class="fa fa-refresh" t-att-class="{'fa-spin': state.loading}"></i>
+                    Refresh
+                </button>
+            </div>
+
+            <!-- Loading State -->
+            <div t-if="state.loading" class="dashboard_loading">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <p>Loading dashboard data...</p>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div t-if="!state.loading and state.dashboardData" class="dashboard_content">
+                <!-- Statistics Cards -->
+                <div class="row mb-4">
+                    <!-- Books Statistics -->
+                    <div class="col-md-4">
+                        <div class="card stat_card">
+                            <div class="card-body">
+                                <div class="stat_icon books_icon">
+                                    <i class="fa fa-book"></i>
+                                </div>
+                                <div class="stat_content">
+                                    <h3 class="stat_number" t-esc="formatNumber(state.dashboardData.books.total)">0</h3>
+                                    <p class="stat_label">Total Books</p>
+                                    <div class="stat_details">
+                                        <span class="badge badge-success">
+                                            <t t-esc="state.dashboardData.books.available"/> Available
+                                        </span>
+                                        <span class="badge badge-danger">
+                                            <t t-esc="state.dashboardData.books.unavailable"/> Unavailable
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Members Statistics -->
+                    <div class="col-md-4">
+                        <div class="card stat_card">
+                            <div class="card-body">
+                                <div class="stat_icon members_icon">
+                                    <i class="fa fa-users"></i>
+                                </div>
+                                <div class="stat_content">
+                                    <h3 class="stat_number" t-esc="formatNumber(state.dashboardData.members.total)">0</h3>
+                                    <p class="stat_label">Total Members</p>
+                                    <div class="stat_details">
+                                        <span class="badge badge-success">
+                                            <t t-esc="state.dashboardData.members.active"/> Active
+                                        </span>
+                                        <span class="badge badge-danger">
+                                            <t t-esc="state.dashboardData.members.expired"/> Expired
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Book Moves Statistics -->
+                    <div class="col-md-4">
+                        <div class="card stat_card">
+                            <div class="card-body">
+                                <div class="stat_icon moves_icon">
+                                    <i class="fa fa-exchange"></i>
+                                </div>
+                                <div class="stat_content">
+                                    <h3 class="stat_number" t-esc="formatNumber(state.dashboardData.book_moves.total)">0</h3>
+                                    <p class="stat_label">Total Transactions</p>
+                                    <div class="stat_details">
+                                        <span class="badge">
+                                            <t t-esc="state.dashboardData.book_moves.draft"/> Draft
+                                        </span>
+                                        <span class="badge badge-info">
+                                            <t t-esc="state.dashboardData.book_moves.borrowed"/> Borrowed
+                                        </span>
+                                        <span class="badge badge-danger">
+                                            <t t-esc="state.dashboardData.book_moves.expired"/> Expired
+                                        </span>
+                                        <span class="badge badge-success">
+                                            <t t-esc="state.dashboardData.book_moves.returned"/> Returned
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Simple Charts Row -->
+                <div class="row mb-4">
+                    <!-- Books Chart -->
+                    <div class="col-md-6">
+                        <div class="card chart_card">
+                            <div class="card-header">
+                                <h5><i class="fa fa-pie-chart"></i> Books by Status</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="simple_chart">
+                                    <div t-foreach="state.chartData.books_by_status.labels" t-as="label" t-key="label" class="chart_item">
+                                        <div class="chart_label" t-esc="label"></div>
+                                        <div class="chart_bar">
+                                            <div class="chart_fill" 
+                                                 t-att-style="'width: ' + calculatePercentage(state.chartData.books_by_status.data[state.chartData.books_by_status.labels.indexOf(label)], state.dashboardData.books.total) + '%'">
+                                            </div>
+                                        </div>
+                                        <div class="chart_value" t-esc="state.chartData.books_by_status.data[state.chartData.books_by_status.labels.indexOf(label)]"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Members Chart -->
+                    <div class="col-md-6">
+                        <div class="card chart_card">
+                            <div class="card-header">
+                                <h5><i class="fa fa-pie-chart"></i> Members by Status</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="simple_chart">
+                                    <div t-foreach="state.chartData.members_by_status.labels" t-as="label" t-key="label" class="chart_item">
+                                        <div class="chart_label" t-esc="label"></div>
+                                        <div class="chart_bar">
+                                            <div class="chart_fill" 
+                                                 t-att-style="'width: ' + calculatePercentage(state.chartData.members_by_status.data[state.chartData.members_by_status.labels.indexOf(label)], state.dashboardData.members.total) + '%'">
+                                            </div>
+                                        </div>
+                                        <div class="chart_value" t-esc="state.chartData.members_by_status.data[state.chartData.members_by_status.labels.indexOf(label)]"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activities -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5><i class="fa fa-history"></i> Recent Activities</h5>
+                            </div>
+                            <div class="card-body">
+                                <div t-if="state.dashboardData.recent_activities.length === 0" class="text-center text-muted">
+                                    <i class="fa fa-inbox fa-3x mb-3"></i>
+                                    <p>No recent activities</p>
+                                </div>
+                                <div t-else="" class="activity_list">
+                                    <div t-foreach="state.dashboardData.recent_activities" t-as="activity" t-key="activity.id" class="activity_item">
+                                        <div class="activity_icon">
+                                            <i t-att-class="getStatusIcon(activity.action)"></i>
+                                        </div>
+                                        <div class="activity_content">
+                                            <div class="activity_title">
+                                                <strong t-esc="activity.book_name"></strong>
+                                                <span t-att-class="'badge badge-' + getStatusColor(activity.action)" t-esc="activity.action"></span>
+                                            </div>
+                                            <div class="activity_details">
+                                                <span class="member_name" t-esc="activity.member_name"></span>
+                                                <span class="activity_date" t-esc="activity.date"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates> 

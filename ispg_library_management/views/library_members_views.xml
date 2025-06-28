@@ -1,0 +1,100 @@
+<odoo>
+    <record id="view_member_list" model="ir.ui.view">
+        <field name="name">res.partner.member.list</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="membership_id"/>
+                <field name="membership_status" widget="badge" 
+                       decoration-success="membership_status == 'active'"
+                       decoration-warning="membership_status == 'pending'"
+                       decoration-danger="membership_status == 'expired'"/>
+                <field name="membership_start_date"/>
+                <field name="membership_end_date"/>
+                <field name="contact"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_member_form" model="ir.ui.view">
+        <field name="name">res.partner.member.form</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_renew_membership" 
+                            type="object" 
+                            string="Renew Membership" 
+                            class="btn-primary"
+                            invisible="membership_status != 'expired'"
+                            icon="fa-refresh"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="action_view_book_moves" type="object" icon="fa-file-text-o">
+                            <field string="Book Borrowed History" name="book_move_counts" widget="statinfo"/>
+                        </button>
+                        <button class="oe_stat_button" name="action_view_membership_invoices" type="object" icon="fa-credit-card">
+                            <field string="Membership Renewals" name="membership_invoice_count" widget="statinfo"/>
+                        </button>
+                        <button class="oe_stat_button" name="action_view_penalty_invoices" type="object" icon="fa-exclamation-triangle">
+                            <field string="Penalty Invoices" name="penalty_invoice_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <field name="is_library_member" invisible="1"/>
+                        <field name="membership_id"/>
+                        <field name="membership_status" widget="badge" 
+                               decoration-success="membership_status == 'active'"
+                               decoration-warning="membership_status == 'pending'"
+                               decoration-danger="membership_status == 'expired'"/>
+                        <h1>
+                            <div class="d-flex">
+                                <field class="text-break" name="name" options="{'line_breaks': False}" widget="text"
+                                       placeholder="Members Name"/>
+                            </div>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <div class="o_address_format">
+                                <field name="street" placeholder="Street..." class="o_address_street" readonly="type == 'contact' and parent_id"/>
+                                <field name="street2" placeholder="Street 2..." class="o_address_street" readonly="type == 'contact' and parent_id"/>
+                                <field name="city" placeholder="City" class="o_address_city" readonly="type == 'contact' and parent_id"/>
+                                <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" readonly="type == 'contact' and parent_id" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
+                                <field name="zip" placeholder="ZIP" class="o_address_zip" readonly="type == 'contact' and parent_id"/>
+                                <div name="partner_address_country" class="d-flex justify-content-between">
+                                    <field name="country_id" placeholder="Country" class="o_address_country" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}" readonly="type == 'contact' and parent_id"/>
+                                </div>
+                            </div>
+                            <field name="membership_start_date"/>
+                            <field name="membership_end_date"/>
+                        </group>
+                        <group>
+                            <field name="phone" widget="phone"/>
+                            <field name="mobile" widget="phone"/>
+                            <field name="email" widget="email" context="{'gravatar_image': True}"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_member" model="ir.actions.act_window">
+        <field name="name">Members</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_ids"
+               eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'list', 'view_id': ref('view_member_list')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('view_member_form')})]"/>
+        <field name="context">{'default_is_library_member': True}</field>
+        <field name="domain">[("is_library_member", "=", True)]</field>
+    </record>
+
+    <menuitem id="menu_members" name="Members" parent="menu_library_root" action="action_member" sequence="2"/>
+</odoo> 

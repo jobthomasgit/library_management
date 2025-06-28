@@ -1,0 +1,106 @@
+<odoo>
+    <record id="view_book_move_list" model="ir.ui.view">
+        <field name="name">book.move.list</field>
+        <field name="model">book.move</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="book_id"/>
+                <field name="member_id"/>
+                <field name="issue_date"/>
+                <field name="return_date"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'borrowed'"
+                       decoration-danger="state == 'expired'"
+                       decoration-success="state == 'returned'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_book_move_form" model="ir.ui.view">
+        <field name="name">book.move.form</field>
+        <field name="model">book.move</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_borrow" string="Confirm" type="object" class="oe_highlight"
+                            invisible="state != 'draft'"/>
+                    <button name="action_return" string="Return" type="object" class="oe_highlight" 
+                            invisible="state not in ('borrowed', 'expired')"/>
+                    <button name="action_expire" string="Mark Expired" type="object" 
+                            invisible="state != 'borrowed'"/>
+                    <button name="action_pay_penalty" string="Pay Penalty" type="object" 
+                            class="btn-warning" invisible="not late_returns or penalty_paid"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Late" bg_color="text-bg-danger" invisible="late_returns == False"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="book_id" readonly="state != 'draft'"/>
+                            <field name="member_id" readonly="state != 'draft'" context="{'default_is_library_member': True}"/>
+                            <field name="issue_date" readonly="state != 'draft'"/>
+                            <field name="return_date" readonly="state != 'draft'"/>
+                            <field name="actual_return_date"/>
+                        </group>
+                        <group>
+                            <field name="late_returns" invisible="1"/>
+                            <field name="penalty_paid" invisible="1"/>
+                            <field name="return_days" readonly="state != 'draft'"/>
+                            <field name="penalty_per_day" readonly="state != 'draft'"/>
+                            <field name="late_return_penalty" readonly="1" force_save="1"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Notes" name="notes">
+                            <field name="notes" readonly="state != 'draft'"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_book_move_kanban" model="ir.ui.view">
+        <field name="name">book.move.kanban</field>
+        <field name="model">book.move</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="name"/>
+                <field name="book_id"/>
+                <field name="member_id"/>
+                <field name="issue_date"/>
+                <field name="return_date"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record">
+                            <div class="o_kanban_details">
+                                <strong><field name="name"/></strong><br/>
+                                <span><t t-esc="record.book_id.raw_value ? record.book_id.raw_value[1] : ''"/></span><br/>
+                                <span><t t-esc="record.member_id.raw_value ? record.member_id.raw_value[1] : ''"/></span><br/>
+                                <span>Issue: <t t-esc="record.issue_date.raw_value"/></span><br/>
+                                <span>Return: <t t-esc="record.return_date.raw_value"/></span><br/>
+                                <span><t t-esc="record.state.raw_value"/></span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_book_move" model="ir.actions.act_window">
+        <field name="name">Book Borrow</field>
+        <field name="res_model">book.move</field>
+        <field name="view_mode">list,kanban,form</field>
+    </record>
+
+    <menuitem id="menu_book_borrow" name="Book Borrow" parent="menu_library_root" action="action_book_move" sequence="10"/>
+</odoo> 

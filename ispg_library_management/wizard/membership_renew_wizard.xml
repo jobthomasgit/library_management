@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Membership Renewal Wizard Form View -->
+        <record id="view_membership_renew_wizard_form" model="ir.ui.view">
+            <field name="name">membership.renew.wizard.form</field>
+            <field name="model">membership.renew.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Membership Renewal">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="partner_id" readonly="1"/>
+                                <field name="membership_start_date"/>
+                                <field name="membership_end_date"/>
+                            </group>
+                            <group>
+                                <field name="invoice_amount"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_renew_with_invoice"
+                                string="Renew with Invoice"
+                                type="object"
+                                class="btn-primary"/>
+                        <button name="action_renew_without_invoice"
+                                string="Renew Without Invoice" 
+                                type="object" 
+                                class="btn-secondary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Membership Renewal Wizard Action -->
+        <record id="action_membership_renew_wizard" model="ir.actions.act_window">
+            <field name="name">Renew Membership</field>
+            <field name="res_model">membership.renew.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'default_partner_id': active_id}</field>
+        </record>
+    </data>
+</odoo> 

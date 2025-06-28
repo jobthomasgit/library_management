@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_config_settings_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.library</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Library" string="Library" name="ispg_library_management">
+                    <block title="Library" name="library_setting_container">
+                        <setting title="Default settings for Book borrow">
+                            <div class="mt16">
+                                <label string="Default number of days to return a book" for="library_default_return_days" class="col-lg-3 o_light_label"/>
+                                <field name="library_default_return_days"/>
+                            </div>
+                            <div class="mt16">
+                                <label string="Penalty amount per day when book is returned late" for="library_penalty_per_day" class="col-lg-3 o_light_label"/>
+                                <field name="library_penalty_per_day"/>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_library_config_settings" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'ispg_library_management', 'bin_size': False}</field>
+    </record>
+
+    <menuitem id="menu_library_settings"
+              name="Settings"
+              parent="menu_library_configuration"
+              sequence="-15"
+              action="action_library_config_settings"/>
+
+</odoo>
