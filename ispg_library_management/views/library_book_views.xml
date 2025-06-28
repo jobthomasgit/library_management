@@ -17,6 +17,29 @@
         </field>
     </record>
 
+    <record id="view_library_book_search" model="ir.ui.view">
+        <field name="name">library.book.search</field>
+        <field name="model">library.book</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="author_id"/>
+                <field name="isbn"/>
+                <filter string="Available" name="available" domain="[('availability_status', '=', 'available')]"/>
+                <filter string="Unavailable" name="unavailable" domain="[('availability_status', '=', 'unavailable')]"/>
+                <filter string="In Stock" name="in_stock" domain="[('available_copies', '>', 0)]"/>
+                <filter string="Out of Stock" name="out_of_stock" domain="[('available_copies', '=', 0)]"/>
+                <separator/>
+                <filter string="My Books" name="my_books" domain="[('company_id', '=', company_id)]" groups="base.group_multi_company"/>
+                <group expand="0" string="Group By">
+                    <filter string="Availability Status" name="group_availability" context="{'group_by': 'availability_status'}"/>
+                    <filter string="Author" name="group_author" context="{'group_by': 'author_id'}"/>
+                    <filter string="Company" name="group_company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <record id="view_library_book_form" model="ir.ui.view">
         <field name="name">library.book.form</field>
         <field name="model">library.book</field>

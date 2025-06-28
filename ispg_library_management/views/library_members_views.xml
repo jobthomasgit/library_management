@@ -6,15 +6,38 @@
             <list>
                 <field name="name"/>
                 <field name="membership_id"/>
-                <field name="membership_status" widget="badge" 
-                       decoration-success="membership_status == 'active'"
-                       decoration-warning="membership_status == 'pending'"
-                       decoration-danger="membership_status == 'expired'"/>
                 <field name="membership_start_date"/>
                 <field name="membership_end_date"/>
-                <field name="contact"/>
                 <field name="company_id" groups="base.group_multi_company"/>
+                <field name="membership_status" widget="badge"
+                decoration-success="membership_status == 'active'"
+                decoration-warning="membership_status == 'pending'"
+                decoration-danger="membership_status == 'expired'"/>
             </list>
+        </field>
+    </record>
+
+    <record id="view_member_search" model="ir.ui.view">
+        <field name="name">res.partner.member.search</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="membership_id"/>
+                <field name="email"/>
+                <field name="phone"/>
+                <filter string="Active Members" name="active_members" domain="[('membership_status', '=', 'active')]"/>
+                <filter string="Expired Members" name="expired_members" domain="[('membership_status', '=', 'expired')]"/>
+                <filter string="Expiring Soon" name="expiring_soon" domain="[('membership_end_date', '&lt;=', (context_today() + datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter string="My Members" name="my_members" domain="[('company_id', '=', company_id)]" groups="base.group_multi_company"/>
+                <group expand="0" string="Group By">
+                    <filter string="Membership Status" name="group_membership_status" context="{'group_by': 'membership_status'}"/>
+                    <filter string="Company" name="group_company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Membership Start Date" name="group_start_date" context="{'group_by': 'membership_start_date:month'}"/>
+                    <filter string="Membership End Date" name="group_end_date" context="{'group_by': 'membership_end_date:month'}"/>
+                </group>
+            </search>
         </field>
     </record>
 

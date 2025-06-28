@@ -17,6 +17,35 @@
         </field>
     </record>
 
+    <record id="view_book_move_search" model="ir.ui.view">
+        <field name="name">book.move.search</field>
+        <field name="model">book.move</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="book_id"/>
+                <field name="member_id"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Borrowed" name="borrowed" domain="[('state', '=', 'borrowed')]"/>
+                <filter string="Expired" name="expired" domain="[('state', '=', 'expired')]"/>
+                <filter string="Returned" name="returned" domain="[('state', '=', 'returned')]"/>
+                <filter string="Late Returns" name="late_returns" domain="[('late_returns', '=', True)]"/>
+                <filter string="This Month" name="this_month" domain="[('issue_date', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Last Month" name="last_month" domain="[('issue_date', '&gt;=', (context_today() + relativedelta(months=-1, day=1)).strftime('%Y-%m-%d')), ('issue_date', '&lt;', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter string="My Transactions" name="my_transactions" domain="[('company_id', '=', company_id)]" groups="base.group_multi_company"/>
+                <group expand="0" string="Group By">
+                    <filter string="State" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Book" name="group_book" context="{'group_by': 'book_id'}"/>
+                    <filter string="Member" name="group_member" context="{'group_by': 'member_id'}"/>
+                    <filter string="Issue Date" name="group_issue_date" context="{'group_by': 'issue_date:month'}"/>
+                    <filter string="Return Date" name="group_return_date" context="{'group_by': 'return_date:month'}"/>
+                    <filter string="Company" name="group_company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <record id="view_book_move_form" model="ir.ui.view">
         <field name="name">book.move.form</field>
         <field name="model">book.move</field>

@@ -8,6 +8,7 @@ import { Component, onWillStart, useState } from "@odoo/owl";
 class SimpleLibraryDashboard extends Component {
     setup() {
         this.orm = useService("orm");
+        this.action = useService("action");
         this.state = useState({
             dashboardData: null,
             chartData: null,
@@ -71,6 +72,45 @@ class SimpleLibraryDashboard extends Component {
 
     formatNumber(num) {
         return num.toLocaleString();
+    }
+
+    openBooksView() {
+        this.action.doAction({
+            type: 'ir.actions.act_window',
+            res_model: 'library.book',
+            view_mode: 'list,form',
+            name: 'Books',
+            views: [[false, 'list'], [false, 'form']],
+            target: 'current',
+        });
+    }
+
+    openMembersView() {
+        this.action.doAction({
+            type: 'ir.actions.act_window',
+            res_model: 'res.partner',
+            view_mode: 'list,form',
+            name: 'Members',
+            views: [[false, 'list'], [false, 'form']],
+            target: 'current',
+            domain: [["is_library_member", "=", true]],
+            context: {
+                form_view_ref: "ispg_library_management.view_member_form",
+                list_view_ref: "ispg_library_management.view_member_list",
+                default_is_library_member: true,
+            },
+        });
+    }
+
+    openTransactionsView() {
+        this.action.doAction({
+            type: 'ir.actions.act_window',
+            res_model: 'book.move',
+            view_mode: 'list,form',
+            name: 'Book Transactions',
+            views: [[false, 'list'], [false, 'form']],
+            target: 'current',
+        });
     }
 }
 

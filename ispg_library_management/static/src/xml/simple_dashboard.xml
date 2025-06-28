@@ -28,7 +28,7 @@
                 <div class="row mb-4">
                     <!-- Books Statistics -->
                     <div class="col-md-4">
-                        <div class="card stat_card">
+                        <div class="card stat_card" t-on-click="openBooksView" style="cursor: pointer;">
                             <div class="card-body">
                                 <div class="stat_icon books_icon">
                                     <i class="fa fa-book"></i>
@@ -51,7 +51,7 @@
 
                     <!-- Members Statistics -->
                     <div class="col-md-4">
-                        <div class="card stat_card">
+                        <div class="card stat_card" t-on-click="openMembersView" style="cursor: pointer;">
                             <div class="card-body">
                                 <div class="stat_icon members_icon">
                                     <i class="fa fa-users"></i>
@@ -74,7 +74,7 @@
 
                     <!-- Book Moves Statistics -->
                     <div class="col-md-4">
-                        <div class="card stat_card">
+                        <div class="card stat_card" t-on-click="openTransactionsView" style="cursor: pointer;">
                             <div class="card-body">
                                 <div class="stat_icon moves_icon">
                                     <i class="fa fa-exchange"></i>
