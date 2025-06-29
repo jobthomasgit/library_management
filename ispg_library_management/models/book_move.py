@@ -8,6 +8,7 @@ class BookMove(models.Model):
     _name = "book.move"
     _description = "Book Borrow"
     _order = "create_date desc"
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(string="Reference", readonly=True, copy=False)
     book_id = fields.Many2one("library.book", string="Book", required=True, ondelete='restrict',
@@ -30,6 +31,7 @@ class BookMove(models.Model):
     penalty_paid = fields.Boolean(compute="_compute_penalty_paid")
     notes = fields.Text(string="Notes")
     company_id = fields.Many2one("res.company", default=lambda self: self.env.company)
+    user_id = fields.Many2one("res.users", string="Created By", default=lambda self: self.env.user, readonly=True)
 
     @api.model
     def create(self, vals):
@@ -138,15 +140,49 @@ class BookMove(models.Model):
 
     @api.model
     def _check_expired_books_issue(self):
-        """Cron job to check and mark expired books issue"""
+        """Cron job to check and mark expired books issue and send notifications"""
         today = fields.Date.today()
         expired_moves = self.search([
             ("state", "=", "borrowed"),
             ("return_date", "<", today)
         ])
-        expired_moves.write(
-            {
-                "state": "expired",
-                "late_returns": True
+        
+        # Mark as expired
+        expired_moves.write({
+            "state": "expired",
+            "late_returns": True
+        })
+        
+        # Send notifications for each expired move
+        for move in expired_moves:
+            # Notify the user who created the transaction
+            if move.user_id:
+                self._send_expired_book_notification(move, move.user_id)
+            
+            # Notify library managers
+            managers = self.env['res.users'].search([
+                ('groups_id', 'in', [self.env.ref('ispg_library_management.group_library_manager').id])
+            ])
+            for manager in managers:
+                self._send_expired_book_notification(move, manager)
+
+    def _send_expired_book_notification(self, book_move, user):
+        """Send notification for expired book move"""
+        # Get or create activity type
+        activity_type = self.env.ref('mail.mail_activity_data_todo')
+        if not activity_type:
+            activity_type = self.env['mail.activity.type'].search([], limit=1)
+        
+        if activity_type:
+            # Create an activity for the notification
+            activity_vals = {
+                'activity_type_id': activity_type.id,
+                'res_model_id': self.env['ir.model']._get('book.move').id,
+                'res_id': book_move.id,
+                'user_id': user.id,
+                'summary': 'Book Return Overdue',
+                'note': f'Book "{book_move.book_id.name}" borrowed by {book_move.member_id.name} is overdue. Return date: {book_move.return_date}',
+                'date_deadline': fields.Date.today(),
             }
-        )
+            
+            self.env['mail.activity'].create(activity_vals)

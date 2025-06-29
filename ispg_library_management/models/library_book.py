@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 class LibraryBook(models.Model):
     _name = "library.book"
     _description = "Library Book"
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     def _get_default_return_days(self):
         return int(self.env['ir.config_parameter'].sudo().get_param('ispg_library_management.default_return_days', 14))
@@ -39,7 +40,7 @@ class LibraryBook(models.Model):
 
     @api.onchange("total_copies")
     def set_available_copies(self):
-        borrowed_book_move_ids = self.book_move_ids.filtered(lambda s: s.state not in ['draft', 'expired'])
+        borrowed_book_move_ids = self.book_move_ids.filtered(lambda s: s.state not in ['draft', 'returned'])
         self.available_copies = self.total_copies - len(borrowed_book_move_ids)
 
     def _compute_book_move_counts(self):
@@ -74,3 +75,44 @@ class LibraryBook(models.Model):
                 "default_book_id": self.id,
             }
         }
+
+    @api.model
+    def _check_unavailable_books(self):
+        """Cron job to check for unavailable books and send notifications"""
+        unavailable_books = self.search([
+            ('availability_status', '=', 'unavailable'),
+            ('total_copies', '>', 0)  # Only books that should have copies
+        ])
+        
+        if unavailable_books:
+            # Send notifications to library managers
+            managers = self.env['res.users'].search([
+                ('groups_id', 'in', [self.env.ref('ispg_library_management.group_library_manager').id])
+            ])
+            
+            for manager in managers:
+                self._send_unavailable_books_notification(unavailable_books, manager)
+
+    def _send_unavailable_books_notification(self, books, user):
+        """Send notification for unavailable books"""
+        book_names = ', '.join([book.name for book in books])
+        
+        # Get or create activity type
+        activity_type = self.env.ref('mail.mail_activity_data_todo')
+        if not activity_type:
+            activity_type = self.env['mail.activity.type'].search([], limit=1)
+        
+        if activity_type:
+            # Create an activity for the notification
+            activity_vals = {
+                'activity_type_id': activity_type.id,
+                'res_model_id': self.env['ir.model']._get('library.book').id,
+                'res_id': books[0].id if books else False,
+                'user_id': user.id,
+                'summary': 'Books Currently Unavailable',
+                'note': f'The following books are currently unavailable: {book_names}. Total unavailable books: {len(books)}',
+                'date_deadline': fields.Date.today(),
+            }
+            print(activity_vals)
+            
+            self.env['mail.activity'].create(activity_vals)

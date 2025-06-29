@@ -110,16 +110,46 @@ class ResPartner(models.Model):
 
     @api.model
     def _check_membership_expiry(self):
-        """Cron job to check and update expired memberships"""
+        """Cron job to check and update expired memberships and send notifications"""
         today = date.today()
         expired_members = self.search([
             ('is_library_member', '=', True),
             ('membership_end_date', '<', today),
             ('membership_status', '!=', 'expired')
         ])
-        
+
         if expired_members:
             expired_members.write({'membership_status': 'expired'})
+            
+            # Send notifications to library managers
+            managers = self.env['res.users'].search([
+                ('groups_id', 'in', [self.env.ref('ispg_library_management.group_library_manager').id])
+            ])
+            
+            for member in expired_members:
+                for manager in managers:
+                    self._send_expired_member_notification(member, manager)
+
+    def _send_expired_member_notification(self, member, user):
+        """Send notification for expired member"""
+        # Get or create activity type
+        activity_type = self.env.ref('mail.mail_activity_data_todo')
+        if not activity_type:
+            activity_type = self.env['mail.activity.type'].search([], limit=1)
+        
+        if activity_type:
+            # Create an activity for the notification
+            activity_vals = {
+                'activity_type_id': activity_type.id,
+                'res_model_id': self.env['ir.model']._get('res.partner').id,
+                'res_id': member.id,
+                'user_id': user.id,
+                'summary': 'Member Expired',
+                'note': f'Member "{member.name}" membership has expired on {member.membership_end_date}',
+                'date_deadline': fields.Date.today(),
+            }
+            
+            self.env['mail.activity'].create(activity_vals)
 
     @api.model
     def create(self, vals):

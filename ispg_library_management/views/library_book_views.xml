@@ -128,7 +128,7 @@
         <field name="view_mode">kanban,list,form</field>
     </record>
 
-    <menuitem id="menu_library_root" name="Library Management"/>
+    <menuitem id="menu_library_root" name="Library Management" groups="ispg_library_management.group_library_user,ispg_library_management.group_library_manager"/>
     <menuitem id="menu_library_books" name="Books" parent="menu_library_root" action="action_library_book"
               sequence="2"/>
     <menuitem id="menu_library_configuration" name="Configuration" parent="menu_library_root" sequence="20"/>

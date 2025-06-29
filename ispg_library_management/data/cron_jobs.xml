@@ -21,5 +21,25 @@
             <field name="active">true</field>
         </record>
 
+        <record id="ir_cron_check_unavailable_books" model="ir.cron">
+            <field name="name">Check Unavailable Books</field>
+            <field name="code">model._check_unavailable_books()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="model_id" ref="model_library_book"/>
+            <field name="state">code</field>
+            <field name="active">true</field>
+        </record>
+
+        <record id="ir_cron_process_recurring_renewals" model="ir.cron">
+            <field name="name">Process Recurring Invoice Renewals</field>
+            <field name="code">model._process_recurring_renewals()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="model_id" ref="model_recurring_invoice"/>
+            <field name="state">code</field>
+            <field name="active">true</field>
+        </record>
+
     </data>
 </odoo> 

@@ -2,6 +2,7 @@ from . import library_book
 from . import book_author
 from . import library_members
 from . import book_move
+from . import recurring_invoice
 from . import res_config_settings
 from . import res_company
 from . import library_dashboard

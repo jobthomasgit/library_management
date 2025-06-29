@@ -7,6 +7,7 @@
                 <field name="name"/>
                 <field name="book_id"/>
                 <field name="member_id"/>
+                <field name="user_id"/>
                 <field name="issue_date"/>
                 <field name="return_date"/>
                 <field name="state" widget="badge"
@@ -25,6 +26,7 @@
                 <field name="name"/>
                 <field name="book_id"/>
                 <field name="member_id"/>
+                <field name="user_id"/>
                 <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
                 <filter string="Borrowed" name="borrowed" domain="[('state', '=', 'borrowed')]"/>
                 <filter string="Expired" name="expired" domain="[('state', '=', 'expired')]"/>
@@ -34,10 +36,12 @@
                 <filter string="Last Month" name="last_month" domain="[('issue_date', '&gt;=', (context_today() + relativedelta(months=-1, day=1)).strftime('%Y-%m-%d')), ('issue_date', '&lt;', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d'))]"/>
                 <separator/>
                 <filter string="My Transactions" name="my_transactions" domain="[('company_id', '=', company_id)]" groups="base.group_multi_company"/>
+                <filter string="My Created Transactions" name="my_created_transactions" domain="[('user_id', '=', uid)]"/>
                 <group expand="0" string="Group By">
                     <filter string="State" name="group_state" context="{'group_by': 'state'}"/>
                     <filter string="Book" name="group_book" context="{'group_by': 'book_id'}"/>
                     <filter string="Member" name="group_member" context="{'group_by': 'member_id'}"/>
+                    <filter string="Created By" name="group_user" context="{'group_by': 'user_id'}"/>
                     <filter string="Issue Date" name="group_issue_date" context="{'group_by': 'issue_date:month'}"/>
                     <filter string="Return Date" name="group_return_date" context="{'group_by': 'return_date:month'}"/>
                     <filter string="Company" name="group_company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
@@ -83,6 +87,7 @@
                             <field name="return_days" readonly="state != 'draft'"/>
                             <field name="penalty_per_day" readonly="state != 'draft'"/>
                             <field name="late_return_penalty" readonly="1" force_save="1"/>
+                            <field name="user_id" readonly="1"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
                         </group>
                     </group>
