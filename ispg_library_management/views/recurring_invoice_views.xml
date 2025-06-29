@@ -68,7 +68,8 @@
                         </div>
                         <group>
                             <group>
-                                <field name="member_id"/>
+                                <field name="member_id" context="{'default_is_library_member': True,
+                                   'form_view_ref': 'ispg_library_management.view_member_form'}"/>
                                 <field name="start_date"/>
                                 <field name="end_date"/>
                             </group>

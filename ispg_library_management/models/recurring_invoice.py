@@ -104,5 +104,4 @@ class RecurringInvoice(models.Model):
         }
         
         invoice = self.env['account.move'].create(invoice_vals)
-        print(invoice)
-        return invoice 
+        return invoice

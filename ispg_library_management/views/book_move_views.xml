@@ -32,11 +32,15 @@
                 <filter string="Expired" name="expired" domain="[('state', '=', 'expired')]"/>
                 <filter string="Returned" name="returned" domain="[('state', '=', 'returned')]"/>
                 <filter string="Late Returns" name="late_returns" domain="[('late_returns', '=', True)]"/>
-                <filter string="This Month" name="this_month" domain="[('issue_date', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d'))]"/>
-                <filter string="Last Month" name="last_month" domain="[('issue_date', '&gt;=', (context_today() + relativedelta(months=-1, day=1)).strftime('%Y-%m-%d')), ('issue_date', '&lt;', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d'))]"/>
+                <filter string="This Month" name="this_month"
+                        domain="[('issue_date', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Last Month" name="last_month"
+                        domain="[('issue_date', '&gt;=', (context_today() + relativedelta(months=-1, day=1)).strftime('%Y-%m-%d')), ('issue_date', '&lt;', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d'))]"/>
                 <separator/>
-                <filter string="My Transactions" name="my_transactions" domain="[('company_id', '=', company_id)]" groups="base.group_multi_company"/>
-                <filter string="My Created Transactions" name="my_created_transactions" domain="[('user_id', '=', uid)]"/>
+                <filter string="My Transactions" name="my_transactions" domain="[('company_id', '=', company_id)]"
+                        groups="base.group_multi_company"/>
+                <filter string="My Created Transactions" name="my_created_transactions"
+                        domain="[('user_id', '=', uid)]"/>
                 <group expand="0" string="Group By">
                     <filter string="State" name="group_state" context="{'group_by': 'state'}"/>
                     <filter string="Book" name="group_book" context="{'group_by': 'book_id'}"/>
@@ -44,7 +48,8 @@
                     <filter string="Created By" name="group_user" context="{'group_by': 'user_id'}"/>
                     <filter string="Issue Date" name="group_issue_date" context="{'group_by': 'issue_date:month'}"/>
                     <filter string="Return Date" name="group_return_date" context="{'group_by': 'return_date:month'}"/>
-                    <filter string="Company" name="group_company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Company" name="group_company" context="{'group_by': 'company_id'}"
+                            groups="base.group_multi_company"/>
                 </group>
             </search>
         </field>
@@ -58,11 +63,11 @@
                 <header>
                     <button name="action_borrow" string="Confirm" type="object" class="oe_highlight"
                             invisible="state != 'draft'"/>
-                    <button name="action_return" string="Return" type="object" class="oe_highlight" 
+                    <button name="action_return" string="Return" type="object" class="oe_highlight"
                             invisible="state not in ('borrowed', 'expired')"/>
-                    <button name="action_expire" string="Mark Expired" type="object" 
+                    <button name="action_expire" string="Mark Expired" type="object"
                             invisible="state != 'borrowed'"/>
-                    <button name="action_pay_penalty" string="Pay Penalty" type="object" 
+                    <button name="action_pay_penalty" string="Pay Penalty" type="object"
                             class="btn-warning" invisible="not late_returns or penalty_paid"/>
                     <field name="state" widget="statusbar"/>
                 </header>
@@ -76,7 +81,9 @@
                     <group>
                         <group>
                             <field name="book_id" readonly="state != 'draft'"/>
-                            <field name="member_id" readonly="state != 'draft'" context="{'default_is_library_member': True}"/>
+                            <field name="member_id" readonly="state != 'draft'"
+                                   context="{'default_is_library_member': True,
+                                   'form_view_ref': 'ispg_library_management.view_member_form'}"/>
                             <field name="issue_date" readonly="state != 'draft'"/>
                             <field name="return_date" readonly="state != 'draft'"/>
                             <field name="actual_return_date"/>
@@ -116,12 +123,29 @@
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record">
                             <div class="o_kanban_details">
-                                <strong><field name="name"/></strong><br/>
-                                <span><t t-esc="record.book_id.raw_value ? record.book_id.raw_value[1] : ''"/></span><br/>
-                                <span><t t-esc="record.member_id.raw_value ? record.member_id.raw_value[1] : ''"/></span><br/>
-                                <span>Issue: <t t-esc="record.issue_date.raw_value"/></span><br/>
-                                <span>Return: <t t-esc="record.return_date.raw_value"/></span><br/>
-                                <span><t t-esc="record.state.raw_value"/></span>
+                                <strong>
+                                    <field name="name"/>
+                                </strong>
+                                <br/>
+                                <span>
+                                    <t t-esc="record.book_id.raw_value ? record.book_id.raw_value[1] : ''"/>
+                                </span>
+                                <br/>
+                                <span>
+                                    <t t-esc="record.member_id.raw_value ? record.member_id.raw_value[1] : ''"/>
+                                </span>
+                                <br/>
+                                <span>Issue:
+                                    <t t-esc="record.issue_date.raw_value"/>
+                                </span>
+                                <br/>
+                                <span>Return:
+                                    <t t-esc="record.return_date.raw_value"/>
+                                </span>
+                                <br/>
+                                <span>
+                                    <t t-esc="record.state.raw_value"/>
+                                </span>
                             </div>
                         </div>
                     </t>
@@ -136,5 +160,6 @@
         <field name="view_mode">list,kanban,form</field>
     </record>
 
-    <menuitem id="menu_book_borrow" name="Book Borrow" parent="menu_library_root" action="action_book_move" sequence="10"/>
+    <menuitem id="menu_book_borrow" name="Book Borrow" parent="menu_library_root" action="action_book_move"
+              sequence="10"/>
 </odoo> 
